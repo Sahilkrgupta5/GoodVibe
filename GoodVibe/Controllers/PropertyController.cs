@@ -39,23 +39,35 @@ namespace GoodVibe.Controllers
             }
             return Ok(model);
         }
-
-        [HttpGet("GetByCity")]
+        //[HttpGet("GetByCity")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public async Task<ActionResult<PropertyView>> GetByCity(string city)
+        //{
+        //    if (city == null)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    var model = await _properties.GetByCity(city);
+        //    if (model == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return Ok(model);
+        //}
+        [HttpGet("FilterCity")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PropertyView>> GetByCity(string city)
+        public async Task<ActionResult<List<PropertyView>>> FilterCity([FromQuery] List<string> cities)
         {
-            if (city == null)
+            List<PropertyView> filterCity = await _properties.FilterCity(cities);
+            if (filterCity == null || filterCity.Count == 0)
             {
-                return BadRequest();
+                return NotFound("No properties found for the specified cities.");
             }
-            var model = await _properties.GetByCity(city);
-            if (model == null)
-            {
-                return NotFound();
-            }
-            return Ok(model);
+            return Ok(filterCity);
         }
 
         [HttpGet("GetBystate")]

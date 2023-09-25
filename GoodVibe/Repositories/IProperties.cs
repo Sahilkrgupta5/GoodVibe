@@ -7,7 +7,8 @@ namespace GoodVibe.Repositories
     {
         Task<List<PropertyView>?> GetAllProperty();
         Task<List<PropertyView>?> GetById(int id);
-        Task<List<PropertyView>?> GetByCity(string city);
+        //Task<List<PropertyView>?> GetByCity(string city);
+        Task<List<PropertyView>> FilterCity(List<string> cities);
         Task<List<PropertyView>?> GetByState(string state);
         Task<List<PropertyView>?> GetByPinCode(int pinCode);
         Task<List<PropertyAdd>?> AddProperty([FromBody] PropertyAdd propertyAdd);

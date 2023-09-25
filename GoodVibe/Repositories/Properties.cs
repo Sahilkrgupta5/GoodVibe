@@ -14,7 +14,7 @@ namespace GoodVibe.Repositories
         {
             _db = db;
         }
-        private PropertyView MapPropertyToPropertyView(Property property)
+        public static PropertyView MapPropertyToPropertyView(Property property)
         {
             PropertyView propertyView = new PropertyView
             {
@@ -42,7 +42,6 @@ namespace GoodVibe.Repositories
 
             return null;
         }
-
         public async Task<List<PropertyView>?> GetById(int id)
         {
             List<Property> properties = await _db.Properties.Where(properties => properties.Id == id).ToListAsync();
@@ -54,16 +53,33 @@ namespace GoodVibe.Repositories
             }
             return null;
         }
-        public async Task<List<PropertyView>?> GetByCity(string city)
-        {
-            List<Property> properties = await _db.Properties.Where(property => property.City.ToLower() == city.ToLower()).ToListAsync();
+        //public async Task<List<PropertyView>?> GetByCity(string city)
+        //{
+        //    List<Property> properties = await _db.Properties.Where(property => property.City.ToLower() == city.ToLower()).ToListAsync();
 
-            if (properties != null)
+        //    if (properties != null)
+        //    {
+        //        List<PropertyView> propertyViews = properties.Select(property => MapPropertyToPropertyView(property)).ToList();
+        //        return propertyViews;
+        //    }
+        //    return null;
+        //}
+        public async Task<List<PropertyView>> FilterCity(List<string> cities)
+        {
+            IQueryable<Property> query = _db.Properties;
+
+            if (cities != null && cities.Any())
             {
-                List<PropertyView> propertyViews = properties.Select(property => MapPropertyToPropertyView(property)).ToList();
-                return propertyViews;
+                //List<string> Cities = cities.Select(city => city.ToLower()).ToList();
+
+                query = query.Where(property => cities.Contains(property.City.ToLower()));
             }
-            return null;
+
+            List<PropertyView> propertyViews = await query
+                .Select(property => MapPropertyToPropertyView(property))
+                .ToListAsync();
+
+            return propertyViews;
         }
         public async Task<List<PropertyView>?> GetByState(string state)
         {
